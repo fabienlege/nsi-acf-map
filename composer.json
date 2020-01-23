@@ -1,0 +1,13 @@
+{
+  "name": "fabienlege/nsi-acf-map",
+  "description": "Ajoute une Map, identique en tout point à la map Google mais gratuite (avec leaflet)",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "NSI Agence ho5",
+          "email": "fabien.lege@ho5group.com"
+      }
+  ],
+  "require": {}
+}

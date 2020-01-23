@@ -1,0 +1,19 @@
+
+.nsi-google-map{position:relative;border:#DFDFDF solid 1px;background:#fff}
+.nsi-google-map .title{position:relative;border-bottom:#DFDFDF solid 1px}
+.nsi-google-map .title .search{margin:0;font-size:14px;line-height:30px;height:40px;padding:5px 10px;border:0 none;box-shadow:none;border-radius:0;font-family:inherit;cursor:text}
+.nsi-google-map .title .acf-loading{position:absolute;top:10px;right:11px;display:none}
+.nsi-google-map .title:hover .acf-actions{display:block}
+.nsi-google-map .canvas{height:400px}
+.nsi-google-map .title .acf-icon.-location{display:inline-block}
+.nsi-google-map .title .acf-icon.-cancel{display:none}
+.nsi-google-map .title .acf-icon.-search{display:none}
+.nsi-google-map.-search .title .acf-icon.-location{display:none}
+.nsi-google-map.-search .title .acf-icon.-cancel{display:inline-block}
+.nsi-google-map.-search .title .acf-icon.-search{display:inline-block}
+.nsi-google-map.-value .title .search{font-weight:bold}
+.nsi-google-map.-value .title .acf-icon.-location{display:none}
+.nsi-google-map.-value .title .acf-icon.-cancel{display:inline-block}
+.nsi-google-map.-value .title .acf-icon.-search{display:none}
+.nsi-google-map.-loading .title a{display:none !important}
+.nsi-google-map.-loading .title i{display:inline-block}
