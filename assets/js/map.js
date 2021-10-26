@@ -12,7 +12,6 @@
 		events: {
 			'click a[data-name="clear"]': 'onClickClear',
 			'click a[data-name="locate"]': 'onClickLocate',
-			'click a[data-name="search"]': 'onClickSearch',
 			'keydown .search': 'onKeydownSearch',
 			'keyup .search': 'onKeyupSearch',
 			'focus .search': 'onFocusSearch',
@@ -30,6 +29,10 @@
 
 		$search: function () {
 			return this.$('.search');
+		},
+
+		$searchButton: function () {
+			return this.$(`a[data-name="search"]`);
 		},
 
 		$canvas: function () {
@@ -163,9 +166,9 @@
 		},
 
 		initialize: function () {
-
 			// Ensure Google API is loaded and then initialize map.
 			withAPI(this.initializeMap.bind(this));
+			$(this.$searchButton()).click(this.onClickSearch.bind(this));
 		},
 
 		newLatLng: function (lat, lng) {
@@ -193,15 +196,6 @@
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
 
 			var autocomplete = false;
-      /*this.autocomplete_timeout = null
-      jQuery(this.$search()).keyup(function(){
-        if(this.autocomplete_timeout){
-          clearTimeout(this.autocomplete_timeout)
-        }
-        this.autocomplete_timeout = setTimeout(function(){
-          this.searchAddress(jQuery(this.$search()).val())
-        }.bind(this), 1000)
-      }.bind(this))*/
 
 			// Append references.
 			map.acf = this;
@@ -246,18 +240,6 @@
 				// search
 				field.searchPosition(lat, lng);
 			});
-
-			// Autocomplete search.
-			if (autocomplete) {
-
-				// autocomplete event place_changed is triggered each time the input changes
-				// customize the place object with the current "search value" to allow users controll over the address text
-				/*google.maps.event.addListener(autocomplete, 'place_changed', function() {
-					var place = this.getPlace();
-					place.address = field.getSearchVal();
-				    field.setPlace( place );
-				});*/
-			}
 		},
 
 		searchPosition: function (lat, lng) {
@@ -306,48 +288,9 @@
 				lng: lng,
 				address: this.$search().val()
 			});
-			/*jQuery.ajax({
-				url: "https://photon.komoot.de/reverse/",
-				method: 'GET',
-				data:{
-					lat: lat,
-					lon: lng,
-					limit: 1
-				},
-				success: callback
-			})*/
 		},
 
-		/*setPlace: function( place ){
-			
-			// bail if no place
-			if( !place ) return this;
-			
-			// search name if no geometry
-			// - possible when hitting enter in search address
-			if( place.name && !place.geometry ) {
-				this.searchAddress(place.name);
-				return this;
-			}
-			
-			// vars
-			var lat = place.geometry.location.lat();
-			var lng = place.geometry.location.lng();
-			var address = place.address || place.formatted_address;
-			
-			// update
-			this.setValue({
-				lat: lat,
-				lng: lng,
-				address: address
-			});
-			
-		    // return
-		    return this;
-		},*/
-
 		searchAddress: function (address) {
-
 			// is address latLng?
 			var latLng = address.split(',');
 			if (latLng.length == 2) {
@@ -381,11 +324,11 @@
 				// validate
 				if (!results) {
 					console.log('Geocoder failed due to: ' + status);
-				} else if (!results.features[0]) {
+				} else if (!results.data.length) {
 					console.log('No results found');
 				} else {
-					lat = results.features[0].geometry.coordinates[1];
-					lng = results.features[0].geometry.coordinates[0];
+					lat = results.data[0].latitude;
+					lng = results.data[0].longitude;
 					//address = results[0].formatted_address;
 				}
 
@@ -402,11 +345,11 @@
 
 			// query
 			jQuery.ajax({
-				url: "https://photon.komoot.de/api/",
+				url: "https://proxy.fabienlege.fr/geo-api",
 				method: 'GET',
 				data: {
-					q: address,
-					limit: 1
+					access_key: "cd002e2c1c8c13e4f472a78fa4f65d53",
+					query: address,
 				},
 				success: callback
 			})
@@ -458,6 +401,7 @@
 
 		onClickSearch: function (e, $el) {
 			this.searchAddress(this.$search().val());
+			e.preventDefault();
 		},
 
 		onFocusSearch: function (e, $el) {
@@ -473,7 +417,7 @@
 				if ($el.val()) {
 					this.addClass('-value');
 				}
-			}, 100);
+			}, 3000);
 		},
 
 		onKeyupSearch: function (e, $el) {
@@ -490,16 +434,6 @@
 			if (e.which == 13) {
 				e.preventDefault();
 			}
-		},
-
-		onMousedown: function () {
-
-			/*
-						// clear timeout in 1ms (onMousedown will run before onBlurSearch)
-						this.setTimeout(function(){
-							clearTimeout( this.get('timeout') );
-						}, 1);
-			*/
 		},
 
 		onShow: function () {
